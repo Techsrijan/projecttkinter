@@ -1,5 +1,6 @@
 from tkinter import *
 import pymysql
+from tkinter import messagebox
 
 
 
@@ -14,7 +15,9 @@ def adminlogin():
     a=usernameVar.get()
     b=passwordVar.get()
     if a=="" or b=="":
-        print("Please Enter User Name and Password")
+        messagebox.showwarning("Login Check Window", "Please Enter User Name and Password")
+        usernameVar.set("")
+        passwordVar.set("")
     else:
         print(a,b)
 
