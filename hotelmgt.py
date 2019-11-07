@@ -2,7 +2,11 @@ from tkinter import *
 import pymysql
 from tkinter import messagebox
 
-
+############ to clear all widgets on the screen #################
+def remove_all_widgets():
+    global taz
+    for widget in taz.winfo_children():
+        widget.grid_remove()
 
 ############### database conncetion #########################
 def dbconfig():
@@ -20,6 +24,33 @@ def adminlogin():
         passwordVar.set("")
     else:
         print(a,b)
+        dbconfig()
+        que = "select * from user_info where userid=%s and password=%s"
+        val = (a,b)
+        mycursor.execute(que, val)
+        flag = False
+        data = mycursor.fetchall()
+        for row in data:
+            flag = True
+
+        conn.close()
+        if flag == True:
+            welcomewindow()
+
+        else:
+            messagebox.showerror("Invalid User Credential", 'either User Name or Password is incorrect')
+            usernameVar.set("")
+            passwordVar.set("")
+
+
+############# create wlcome window ######################
+
+def welcomewindow():
+    remove_all_widgets();
+    mainheading()
+    loginLabel = Label(taz, text="Welcome User", font="Arial 30")
+    loginLabel.grid(row=1, column=2, padx=(50, 0), columnspan=5, pady=10)
+
 
 ############# create login window ######################
 
