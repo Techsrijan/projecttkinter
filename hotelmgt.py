@@ -2,17 +2,27 @@ from tkinter import *
 import pymysql
 
 
+
 ############### database conncetion #########################
 def dbconfig():
     global mycursor,conn
     conn = pymysql.connect(host="localhost", user="root", db="wahtaz")
     mycursor = conn.cursor()
 
+############## adminlogin ########################
+def adminlogin():
+    a=usernameVar.get()
+    b=passwordVar.get()
+    if a=="" or b=="":
+        print("Please Enter User Name and Password")
+    else:
+        print(a,b)
+
 ############# create login window ######################
 
 def loginwindow():
-    usernameVar.set("")
-    passwordVar.set("")
+    #usernameVar.set("")
+    #passwordVar.set("")
     loginLabel = Label(taz, text="Admin Login", font="Arial 30")
     loginLabel.grid(row=1, column=2, padx=(50, 0), columnspan=2, pady=10)
 
@@ -22,10 +32,13 @@ def loginwindow():
     passwordLabel = Label(taz, text="Password")
     passwordLabel.grid(row=3, column=2, padx=20, pady=5)
 
+    global usernameVar
+    usernameVar=StringVar()
     usernameEntry = Entry(taz, textvariable=usernameVar)
     usernameEntry.grid(row=2, column=3, padx=20, pady=5)
 
-
+    global passwordVar
+    passwordVar = StringVar()
     passwordEntry = Entry(taz, show="*", textvariable=passwordVar)
     passwordEntry.grid(row=3, column=3, padx=20, pady=5)
 
