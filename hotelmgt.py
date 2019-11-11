@@ -1,6 +1,8 @@
 from tkinter import *
 import pymysql
-from tkinter import messagebox
+from tkinter import messagebox,ttk
+
+
 
 ############ to clear all widgets on the screen #################
 def remove_all_widgets():
@@ -42,6 +44,38 @@ def adminlogin():
             usernameVar.set("")
             passwordVar.set("")
 
+    ################ ondouble click get data ##############
+
+
+def OnDoubleClick(event):
+    item = tazTV.selection()
+    itemNameVar1 = tazTV.item(item, "text")
+    item_detail = tazTV.item(item, "values")
+
+    '''itemnameVar.set(itemNameVar1)
+    itemrateVar.set(item_detail[0])
+    itemTypeVar.set(item_detail[1])'''
+    print(itemNameVar1,item_detail[0],item_detail[1])
+
+###################get data in treeview #####
+def getItemInTreeView():
+    # to delete already inserted item
+    records = tazTV.get_children()
+
+    for element in records:
+        tazTV.delete(element)
+    # insert data in treeview
+    conn = pymysql.connect(host="localhost", user="root", db="wahtaz")
+    mycursor = conn.cursor(pymysql.cursors.DictCursor)
+    print(mycursor)
+    query = "select * from itemlist"
+    mycursor.execute(query)
+    data = mycursor.fetchall()
+    print(data)
+    for row in data:
+        tazTV.insert('', 'end', text=row['item_name'], values=(row["item_rate"], row["item_type"]))
+    conn.close()
+    tazTV.bind("<Double-1>", OnDoubleClick)
 
 ############# create wlcome window ######################
 
@@ -50,7 +84,11 @@ def welcomewindow():
     mainheading()
     loginLabel = Label(taz, text="Welcome User", font="Arial 30")
     loginLabel.grid(row=1, column=2, padx=(50, 0), columnspan=5, pady=10)
-
+    tazTV.grid(row=2, column=2, columnspan=7 )
+    tazTV.heading('#0', text="Item Name")
+    tazTV.heading('#1', text="Rate")
+    tazTV.heading('#2', text="Type")
+    getItemInTreeView()
 
 ############# create login window ######################
 
@@ -90,6 +128,7 @@ def mainheading():
     label.grid(row=0, columnspan=10)
 
 taz=Tk()
+tazTV = ttk.Treeview(height=10, columns=('Item Name''Rate','Type'))
 mainheading()
 loginwindow()
 
