@@ -76,6 +76,43 @@ def getItemInTreeView():
         tazTV.insert('', 'end', text=row['item_name'], values=(row["item_rate"], row["item_type"]))
     conn.close()
     tazTV.bind("<Double-1>", OnDoubleClick)
+#####get data in combo box ######
+
+
+def combo_input():
+    dbconfig()
+
+    mycursor.execute('SELECT item_name FROM itemlist')
+
+    data = []
+
+    for row in mycursor.fetchall():
+        data.append(row[0])
+
+    return data
+################
+def ratelist():
+    dbconfig()
+    que="select item_rate from itemlist where item_name=%s"
+    val=(itemname)
+    mycursor.execute(que,val)
+
+    data = mycursor.fetchall()
+    #print(data)
+    return data
+
+def OptionCallBack(*args):
+    global itemname
+    itemname=combovariable.get()
+    print(itemname)
+    aa=ratelist()
+    print(aa)
+    baserate.set(aa)
+    global v
+    for i in aa:
+        for j in i:
+           v  = j
+
 
 ############# create wlcome window ######################
 
@@ -89,6 +126,17 @@ def welcomewindow():
     tazTV.heading('#1', text="Rate")
     tazTV.heading('#2', text="Type")
     getItemInTreeView()
+    l=combo_input()
+    global combovariable
+    combovariable=StringVar()
+    c = ttk.Combobox(taz, values=l, textvariable=combovariable)
+    c.set("Select Item")
+    combovariable.trace('w', OptionCallBack)
+    c.grid(row=5, column=3, padx=20, pady=5)
+    global baserate
+    baserate=IntVar()
+    rateEntry = Entry(taz, textvariable=baserate)
+    rateEntry.grid(row=6, column=3, padx=20, pady=5)
 
 ############# create login window ######################
 
